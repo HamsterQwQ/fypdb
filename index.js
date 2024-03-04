@@ -419,6 +419,323 @@ app.post("/addprojectmember", (req, res) => {
   );
 });
 
+
+//////////
+// Create Portfolio Table
+app.get("/createportfolio", (req, res) => {
+    let sql = "CREATE TABLE if not exists Portfolio (PortfolioID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), ImageLink varchar(255), PortfolioLink varchar(255), PRIMARY KEY(PortfolioID), FOREIGN KEY(UserID) REFERENCES User(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Portfolio table created");
+    });
+});
+
+// Insert Portfolio Details
+app.post('/insertportfolio', (req, res) => {
+    const { UserID, Title, ImageLink, PortfolioLink } = req.body;
+
+    const sql = 'INSERT INTO Portfolio (UserID, Title, ImageLink, PortfolioLink) VALUES (?, ?, ?, ?)';
+    const values = [UserID, Title, ImageLink, PortfolioLink];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Portfolio details added successfully');
+    });
+});
+
+// Create Experience Table
+app.get("/createexperience", (req, res) => {
+    let sql = "CREATE TABLE if not exists Experience (ExperienceID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), Datarange varchar(255), Company varchar(255), PRIMARY KEY(ExperienceID), FOREIGN KEY(UserID) REFERENCES User(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Experience table created");
+    });
+});
+
+// Insert Experience Details
+app.post('/insertexperience', (req, res) => {
+    const { UserID, Title, Datarange, Company } = req.body;
+
+    const sql = 'INSERT INTO Experience (UserID, Title, Datarange, Company) VALUES (?, ?, ?, ?)';
+    const values = [UserID, Title, Datarange, Company];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Experience details added successfully');
+    });
+});
+
+
+// Create ExperienceTask Table
+app.get("/createexperiencetask", (req, res) => {
+    let sql = "CREATE TABLE if not exists ExperienceTask (ExperienceTaskID int AUTO_INCREMENT, ExperienceID int NOT NULL, Experiencetask varchar(255), PRIMARY KEY(ExperienceTaskID), FOREIGN KEY(ExperienceID) REFERENCES Experience(ExperienceID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ExperienceTask table created");
+    });
+});
+
+// Insert ExperienceTask Details
+app.post('/insertexperiencetask', (req, res) => {
+    const { ExperienceID, Experiencetask } = req.body;
+
+    const sql = 'INSERT INTO ExperienceTask (ExperienceID, Experiencetask) VALUES (?, ?)';
+    const values = [ExperienceID, Experiencetask];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ExperienceTask details added successfully');
+    });
+});
+
+// Create Education Table
+app.get("/createeducation", (req, res) => {
+    let sql = "CREATE TABLE if not exists Education (EducationID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), Datarange varchar(255), School varchar(255), PRIMARY KEY(EducationID), FOREIGN KEY(UserID) REFERENCES User(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Education table created");
+    });
+});
+
+// Insert Education Details
+app.post('/inserteducation', (req, res) => {
+    const { UserID, Title, Datarange, School } = req.body;
+
+    const sql = 'INSERT INTO Education (UserID, Title, Datarange, School) VALUES (?, ?, ?, ?)';
+    const values = [UserID, Title, Datarange, School];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Education details added successfully');
+    });
+});
+
+
+// Create EducationTask Table
+app.get("/createeducationtask", (req, res) => {
+    let sql = "CREATE TABLE if not exists EducationTask (EducationTaskID int AUTO_INCREMENT, EducationID int NOT NULL, EducationTask varchar(255), PRIMARY KEY(EducationTaskID), FOREIGN KEY(EducationID) REFERENCES Education(EducationID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("EducationTask table created");
+    });
+});
+
+// Insert EducationTask Details
+app.post('/inserteducationtask', (req, res) => {
+    const { EducationID, EducationTask } = req.body;
+
+    const sql = 'INSERT INTO EducationTask (EducationID, EducationTask) VALUES (?, ?)';
+    const values = [EducationID, EducationTask];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('EducationTask details added successfully');
+    });
+});
+
+
+// Create Certification Table
+app.get("/createcertification", (req, res) => {
+    let sql = "CREATE TABLE if not exists Certification (CertificationID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), Datarange varchar(255), Company varchar(255), Certlink varchar(255), PRIMARY KEY(CertificationID), FOREIGN KEY(UserID) REFERENCES User(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Certification table created");
+    });
+});
+
+// Insert Certification Details
+app.post('/insertcertification', (req, res) => {
+    const { UserID, Title, Datarange, Company, Certlink } = req.body;
+
+    const sql = 'INSERT INTO Certification (UserID, Title, Datarange, Company, Certlink) VALUES (?, ?, ?, ?, ?)';
+    const values = [UserID, Title, Datarange, Company, Certlink];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Certification details added successfully');
+    });
+});
+
+
+// Create ProjectRoles Table
+app.get("/createprojectroles", (req, res) => {
+    let sql = "CREATE TABLE if not exists ProjectRoles (RoleID int AUTO_INCREMENT, ProjectID int NOT NULL, Skilldesc varchar(255), PRIMARY KEY(roleID), FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ProjectRoles table created");
+    });
+});
+
+// Insert ProjectRoles Details
+app.post('/insertprojectroles', (req, res) => {
+    const { ProjectID, Skilldesc } = req.body;
+
+    const sql = 'INSERT INTO ProjectRoles (ProjectID, Skilldesc) VALUES (?, ?)';
+    const values = [ProjectID, Skilldesc];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ProjectRoles details added successfully');
+    });
+});
+
+
+// Create ProjectRolesSkill Table
+app.get("/createprojectrolesskill", (req, res) => {
+    let sql = "CREATE TABLE if not exists ProjectRolesSkill (RoleSkillID int AUTO_INCREMENT, RoleID int NOT NULL, Skilldesc varchar(255), PRIMARY KEY(RoleSkillID), FOREIGN KEY(RoleID) REFERENCES ProjectRoles(RoleID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ProjectRolesSkill table created");
+    });
+});
+
+// Insert ProjectRolesSkill Details
+app.post('/insertprojectrolesskill', (req, res) => {
+    const { RoleID, Skilldesc } = req.body;
+
+    const sql = 'INSERT INTO ProjectRolesSkill (RoleID, Skilldesc) VALUES (?, ?)';
+    const values = [RoleID, Skilldesc];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ProjectRolesSkill details added successfully');
+    });
+});
+
+
+// Create ProjectTages Table
+app.get("/createprojecttags", (req, res) => {
+    let sql = "CREATE TABLE if not exists ProjectTages (TagID int AUTO_INCREMENT, ProjectID int NOT NULL, Tagname varchar(255), PRIMARY KEY(TagID), FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ProjectTages table created");
+    });
+});
+
+// Insert ProjectTages Details
+app.post('/insertprojecttags', (req, res) => {
+    const { ProjectID, Tagname } = req.body;
+
+    const sql = 'INSERT INTO ProjectTages (ProjectID, Tagname) VALUES (?, ?)';
+    const values = [ProjectID, Tagname];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ProjectTages details added successfully');
+    });
+});
+
+//////////
+
+
 // Frontend routes
 
 // Signup
