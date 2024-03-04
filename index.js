@@ -566,6 +566,53 @@ app.post("/reset-password/:token", (req, res) => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
+// Reset Increment Counters for All Tables
+app.post("/resetallincrements", async (req, res) => {
+    try {
+        const tables = [
+            'User',
+            'Project',
+            'Feedback',
+            'UserSkillSet',
+            'LikedProject',
+            'ProjectMember',
+            'Portfolio',
+            'Experience',
+            'ExperienceTask',
+            'Education',
+            'EducationTask',
+            'Certification',
+            'ProjectRoles',
+            'ProjectRolesSkill',
+            'ProjectTages'
+            // Add more table names as needed
+        ];
+
+        for (const table of tables) {
+            const sql = `ALTER TABLE ${table} AUTO_INCREMENT = 1`;
+            await executeQuery(sql);
+        }
+
+        res.send("All increment counters reset successfully");
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Helper function to execute a query
+function executeQuery(sql) {
+    return new Promise((resolve, reject) => {
+        db.query(sql, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
 app.listen("3000", () => {
   console.log("Server Started on port 3000");
 });
