@@ -50,7 +50,7 @@ app.get("/createdb", (req, res) => {
 // Create User Table
 app.get("/createuser", (req, res) => {
   let sql =
-    "CREATE TABLE if not exists User (UserID int AUTO_INCREMENT, Username VARCHAR(255) NOT NULL, Password varchar(255) NOT NULL, Email varchar(255) UNIQUE NOT NULL, FirstName varchar(20) NOT NULL, LastName varchar(20) NOT NULL, UserType ENUM('stud', 'staff', 'prof'), ProfilePic varchar(255), Userprivatemode boolean, CVlink varchar(255), regdate datetime NOT NULL, lastlogindate datetime NOT NULL, Course varchar(255), Matyear int, Tagline varchar(255), `desc` text, portfolio varchar(255), experience varchar(255), education varchar(255), certifications varchar(255), PRIMARY KEY(UserID))";
+    "CREATE TABLE if not exists user (UserID int AUTO_INCREMENT, Username VARCHAR(255) NOT NULL, Password varchar(255) NOT NULL, Email varchar(255) UNIQUE NOT NULL, FirstName varchar(20) NOT NULL, LastName varchar(20) NOT NULL, UserType ENUM('stud', 'staff', 'prof'), ProfilePic varchar(255), Userprivatemode boolean, CVlink varchar(255), regdate datetime NOT NULL, lastlogindate datetime NOT NULL, Course varchar(255), Matyear int, Tagline varchar(255), `desc` text, portfolio varchar(255), experience varchar(255), education varchar(255), certifications varchar(255), PRIMARY KEY(UserID))";
 
   // Execute the CREATE TABLE statement
   db.query(sql, (err) => {
@@ -91,7 +91,7 @@ app.post("/adduser", (req, res) => {
   } = req.body;
 
   let sql =
-    "INSERT INTO User (Username, Password, Email, FirstName, LastName, UserType, ProfilePic, Userprivatemode, CVlink, regdate, lastlogindate, Course, Matyear, Tagline, `desc`, portfolio, experience, education, certifications) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO user (Username, Password, Email, FirstName, LastName, UserType, ProfilePic, Userprivatemode, CVlink, regdate, lastlogindate, Course, Matyear, Tagline, `desc`, portfolio, experience, education, certifications) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?, ?, ?)";
 
   db.query(
     sql,
@@ -131,7 +131,7 @@ app.post("/adduser", (req, res) => {
 
 // Remove All User in User Database
 app.post("/removeallusers", (req, res) => {
-  let sql = "DELETE FROM User";
+  let sql = "DELETE FROM user";
 
   db.query(sql, (err, result) => {
     if (err) {
@@ -147,7 +147,7 @@ app.post("/removeallusers", (req, res) => {
 
 // Retrieve All User Details in User Database
 app.get("/get-userdata", (req, res) => {
-  const query = "SELECT * FROM User";
+  const query = "SELECT * FROM user";
 
   db.query(query, (error, results) => {
     if (error) {
@@ -164,7 +164,7 @@ app.get("/get-userdata", (req, res) => {
 
 // Reset User Increment
 app.post("/resetuserincrement", (req, res) => {
-  let sql = "ALTER TABLE User AUTO_INCREMENT = 1";
+  let sql = "ALTER TABLE user AUTO_INCREMENT = 1";
 
   db.query(sql, (err) => {
     if (err) {
@@ -181,7 +181,7 @@ app.post("/resetuserincrement", (req, res) => {
 // Create Project Table
 app.get("/createproject", (req, res) => {
   let sql =
-    "CREATE TABLE if not exists Project (ProjectID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255) NOT NULL, Phase enum('Onboarding', 'Initiation', 'Execution', 'Closed') NOT NULL, Recruiting boolean NOT NULL, Details text NOT NULL, Category varchar(255) NOT NULL, Image varchar(255) NOT NULL, RolesAvailable varchar(255) NOT NULL, CreationDate datetime NOT NULL, LastActive datetime NOT NULL, Views int NOT NULL, Likes int NOT NULL, ProjectPrivateMode boolean NOT NULL, PRIMARY KEY(ProjectID), FOREIGN KEY(UserID) REFERENCES User(UserID))";
+    "CREATE TABLE if not exists project (ProjectID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255) NOT NULL, Phase enum('Onboarding', 'Initiation', 'Execution', 'Closed') NOT NULL, Recruiting boolean NOT NULL, Details text NOT NULL, Category varchar(255) NOT NULL, Image varchar(255) NOT NULL, RolesAvailable varchar(255) NOT NULL, CreationDate datetime NOT NULL, LastActive datetime NOT NULL, Views int NOT NULL, Likes int NOT NULL, ProjectPrivateMode boolean NOT NULL, PRIMARY KEY(ProjectID), FOREIGN KEY(UserID) REFERENCES user(UserID))";
   db.query(sql, (err) => {
     if (err) {
       console.error(err);
@@ -214,7 +214,7 @@ app.post("/addproject", (req, res) => {
   } = req.body;
 
   let sql =
-    "INSERT INTO Project (UserID, Title, Phase, Recruiting, Details, Category, Image, RolesAvailable, CreationDate, LastActive, Views, Likes, Projectprivatemode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)";
+    "INSERT INTO project (UserID, Title, Phase, Recruiting, Details, Category, Image, RolesAvailable, CreationDate, LastActive, Views, Likes, Projectprivatemode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)";
 
   db.query(
     sql,
@@ -248,7 +248,7 @@ app.post("/addproject", (req, res) => {
 
 // Get all projects
 app.get("/projectlist", (req, res) => {
-  let sql = "SELECT * FROM Project";
+  let sql = "SELECT * FROM project";
 
   db.query(sql, (error, results) => {
     if (error) {
@@ -279,7 +279,7 @@ app.get("/project/:id", (req, res) => {
 
 // Remove all projects
 app.post("/removeallprojects", (req, res) => {
-  let sql = "DELETE FROM Project";
+  let sql = "DELETE FROM project";
 
   db.query(sql, (err, result) => {
     if (err) {
@@ -295,7 +295,7 @@ app.post("/removeallprojects", (req, res) => {
 
 // Reset Project Increment
 app.post("/resetprojectincrement", (req, res) => {
-  let sql = "ALTER TABLE Project AUTO_INCREMENT = 1";
+  let sql = "ALTER TABLE project AUTO_INCREMENT = 1";
 
   db.query(sql, (err) => {
     if (err) {
@@ -312,7 +312,7 @@ app.post("/resetprojectincrement", (req, res) => {
 // Create Feedback Table
 app.get("/createfeedback", (req, res) => {
   let sql =
-    "CREATE TABLE if not exists Feedback (FeedbackID int AUTO_INCREMENT, Email varchar(255) not null, Subject varchar(255) not null, Comments text not null, PRIMARY KEY(FeedbackID), FOREIGN KEY(Email) REFERENCES User(Email))";
+    "CREATE TABLE if not exists feedback (FeedbackID int AUTO_INCREMENT, Email varchar(255) not null, Subject varchar(255) not null, Comments text not null, PRIMARY KEY(FeedbackID), FOREIGN KEY(Email) REFERENCES user(Email))";
   db.query(sql, (err) => {
     if (err) {
       throw err;
@@ -326,7 +326,7 @@ app.post("/addfeedback", (req, res) => {
   // Assuming you have the feedback details in the request body
   const { Email, Subject, Comments } = req.body;
 
-  let sql = "INSERT INTO Feedback (Email, Subject, Comments) VALUES (?, ?, ?)";
+  let sql = "INSERT INTO feedback (Email, Subject, Comments) VALUES (?, ?, ?)";
 
   db.query(sql, [Email, Subject, Comments], (err, result) => {
     if (err) {
@@ -339,7 +339,7 @@ app.post("/addfeedback", (req, res) => {
 // Create UserSkillSet Table
 app.get("/createuserskillset", (req, res) => {
   let sql =
-    "CREATE TABLE if not exists UserSkillSet (UserSkillSetID int AUTO_INCREMENT, UserID int NOT NULL, SkillName varchar(255) NOT NULL, PRIMARY KEY(UserSkillSetID), FOREIGN KEY(UserID) REFERENCES User(UserID))";
+    "CREATE TABLE if not exists userskillset (UserSkillSetID int AUTO_INCREMENT, UserID int NOT NULL, SkillName varchar(255) NOT NULL, PRIMARY KEY(UserSkillSetID), FOREIGN KEY(UserID) REFERENCES user(UserID))";
   db.query(sql, (err) => {
     if (err) {
       throw err;
@@ -352,7 +352,7 @@ app.get("/createuserskillset", (req, res) => {
 app.post("/adduserskillset", (req, res) => {
   const { UserID, SkillName } = req.body;
 
-  let sql = "INSERT INTO UserSkillSet (UserID, SkillName) VALUES (?, ?)";
+  let sql = "INSERT INTO userskillset (UserID, SkillName) VALUES (?, ?)";
 
   db.query(sql, [UserID, SkillName], (err, result) => {
     if (err) {
@@ -365,7 +365,7 @@ app.post("/adduserskillset", (req, res) => {
 // Create LikedProject Table
 app.get("/createlikedproject", (req, res) => {
   let sql =
-    "CREATE TABLE if not exists LikedProject (LikeID int AUTO_INCREMENT, UserID int NOT NULL, ProjectID int NOT NULL, PRIMARY KEY(LikeID), FOREIGN KEY(UserID) REFERENCES User(UserID), FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID), CONSTRAINT unique_user_project_pair UNIQUE (UserID, ProjectID))";
+    "CREATE TABLE if not exists likedproject (LikeID int AUTO_INCREMENT, UserID int NOT NULL, ProjectID int NOT NULL, PRIMARY KEY(LikeID), FOREIGN KEY(UserID) REFERENCES user(UserID), FOREIGN KEY(ProjectID) REFERENCES project(ProjectID), CONSTRAINT unique_user_project_pair UNIQUE (UserID, ProjectID))";
   db.query(sql, (err) => {
     if (err) {
       throw err;
@@ -378,7 +378,7 @@ app.get("/createlikedproject", (req, res) => {
 app.post("/addlikedproject", (req, res) => {
   const { UserID, ProjectID } = req.body;
 
-  let sql = "INSERT INTO LikedProject (UserID, ProjectID) VALUES (?, ?)";
+  let sql = "INSERT INTO likedproject (UserID, ProjectID) VALUES (?, ?)";
 
   db.query(sql, [UserID, ProjectID], (err, result) => {
     if (err) {
@@ -391,7 +391,7 @@ app.post("/addlikedproject", (req, res) => {
 // Create ProjectMember Table
 app.get("/createprojectmember", (req, res) => {
   let sql =
-    "CREATE TABLE if not exists ProjectMember (ProjectMemberID int AUTO_INCREMENT, UserID int NOT NULL, ProjectID int NOT NULL, Role varchar(255) NOT NULL, JoinDate datetime NOT NULL, LeaveDate datetime, PRIMARY KEY(ProjectMemberID), FOREIGN KEY(UserID) REFERENCES User(UserID), FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID))";
+    "CREATE TABLE if not exists projectmember (ProjectMemberID int AUTO_INCREMENT, UserID int NOT NULL, ProjectID int NOT NULL, Role varchar(255) NOT NULL, JoinDate datetime NOT NULL, LeaveDate datetime, PRIMARY KEY(ProjectMemberID), FOREIGN KEY(UserID) REFERENCES user(UserID), FOREIGN KEY(ProjectID) REFERENCES project(ProjectID))";
   db.query(sql, (err) => {
     if (err) {
       throw err;
@@ -405,7 +405,7 @@ app.post("/addprojectmember", (req, res) => {
   const { UserID, ProjectID, Role, JoinDate, LeaveDate } = req.body;
 
   let sql =
-    "INSERT INTO ProjectMember (UserID, ProjectID, Role, JoinDate, LeaveDate) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO projectmember (UserID, ProjectID, Role, JoinDate, LeaveDate) VALUES (?, ?, ?, ?, ?)";
 
   db.query(
     sql,
@@ -419,6 +419,322 @@ app.post("/addprojectmember", (req, res) => {
   );
 });
 
+// Create Portfolio Table
+app.get("/createportfolio", (req, res) => {
+    let sql = "CREATE TABLE if not exists portfolio (PortfolioID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), ImageLink varchar(255), PortfolioLink varchar(255), PRIMARY KEY(PortfolioID), FOREIGN KEY(UserID) REFERENCES user(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Portfolio table created");
+    });
+});
+
+// Insert Portfolio Details
+app.post('/insertportfolio', (req, res) => {
+    const { UserID, Title, ImageLink, PortfolioLink } = req.body;
+
+    const sql = 'INSERT INTO portfolio (UserID, Title, ImageLink, PortfolioLink) VALUES (?, ?, ?, ?)';
+    const values = [UserID, Title, ImageLink, PortfolioLink];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Portfolio details added successfully');
+    });
+});
+
+// Create Experience Table
+app.get("/createexperience", (req, res) => {
+    let sql = "CREATE TABLE if not exists experience (ExperienceID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), Datarange varchar(255), Company varchar(255), PRIMARY KEY(ExperienceID), FOREIGN KEY(UserID) REFERENCES user(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Experience table created");
+    });
+});
+
+// Insert Experience Details
+app.post('/insertexperience', (req, res) => {
+    const { UserID, Title, Datarange, Company } = req.body;
+
+    const sql = 'INSERT INTO experience (UserID, Title, Datarange, Company) VALUES (?, ?, ?, ?)';
+    const values = [UserID, Title, Datarange, Company];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Experience details added successfully');
+    });
+});
+
+
+// Create ExperienceTask Table
+app.get("/createexperiencetask", (req, res) => {
+    let sql = "CREATE TABLE if not exists experiencetask (ExperienceTaskID int AUTO_INCREMENT, ExperienceID int NOT NULL, Experiencetask varchar(255), PRIMARY KEY(ExperienceTaskID), FOREIGN KEY(ExperienceID) REFERENCES experience(ExperienceID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ExperienceTask table created");
+    });
+});
+
+// Insert ExperienceTask Details
+app.post('/insertexperiencetask', (req, res) => {
+    const { ExperienceID, Experiencetask } = req.body;
+
+    const sql = 'INSERT INTO experiencetask (ExperienceID, Experiencetask) VALUES (?, ?)';
+    const values = [ExperienceID, Experiencetask];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ExperienceTask details added successfully');
+    });
+});
+
+// Create Education Table
+app.get("/createeducation", (req, res) => {
+    let sql = "CREATE TABLE if not exists education (EducationID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), Datarange varchar(255), School varchar(255), PRIMARY KEY(EducationID), FOREIGN KEY(UserID) REFERENCES user(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Education table created");
+    });
+});
+
+// Insert Education Details
+app.post('/inserteducation', (req, res) => {
+    const { UserID, Title, Datarange, School } = req.body;
+
+    const sql = 'INSERT INTO education (UserID, Title, Datarange, School) VALUES (?, ?, ?, ?)';
+    const values = [UserID, Title, Datarange, School];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Education details added successfully');
+    });
+});
+
+
+// Create EducationTask Table
+app.get("/createeducationtask", (req, res) => {
+    let sql = "CREATE TABLE if not exists educationtask (EducationTaskID int AUTO_INCREMENT, EducationID int NOT NULL, EducationTask varchar(255), PRIMARY KEY(EducationTaskID), FOREIGN KEY(EducationID) REFERENCES education(EducationID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("EducationTask table created");
+    });
+});
+
+// Insert EducationTask Details
+app.post('/inserteducationtask', (req, res) => {
+    const { EducationID, EducationTask } = req.body;
+
+    const sql = 'INSERT INTO educationtask (EducationID, EducationTask) VALUES (?, ?)';
+    const values = [EducationID, EducationTask];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('EducationTask details added successfully');
+    });
+});
+
+
+// Create Certification Table
+app.get("/createcertification", (req, res) => {
+    let sql = "CREATE TABLE if not exists certification (CertificationID int AUTO_INCREMENT, UserID int NOT NULL, Title varchar(255), Datarange varchar(255), Company varchar(255), Certlink varchar(255), PRIMARY KEY(CertificationID), FOREIGN KEY(UserID) REFERENCES user(UserID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("Certification table created");
+    });
+});
+
+// Insert Certification Details
+app.post('/insertcertification', (req, res) => {
+    const { UserID, Title, Datarange, Company, Certlink } = req.body;
+
+    const sql = 'INSERT INTO certification (UserID, Title, Datarange, Company, Certlink) VALUES (?, ?, ?, ?, ?)';
+    const values = [UserID, Title, Datarange, Company, Certlink];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('Certification details added successfully');
+    });
+});
+
+
+// Create ProjectRoles Table
+app.get("/createprojectroles", (req, res) => {
+    let sql = "CREATE TABLE if not exists projectroles (RoleID int AUTO_INCREMENT, ProjectID int NOT NULL, Skilldesc varchar(255), PRIMARY KEY(RoleID), FOREIGN KEY(ProjectID) REFERENCES project(ProjectID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ProjectRoles table created");
+    });
+});
+
+// Insert ProjectRoles Details
+app.post('/insertprojectroles', (req, res) => {
+    const { ProjectID, Skilldesc } = req.body;
+
+    const sql = 'INSERT INTO projectroles (ProjectID, Skilldesc) VALUES (?, ?)';
+    const values = [ProjectID, Skilldesc];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ProjectRoles details added successfully');
+    });
+});
+
+
+// Create ProjectRolesSkill Table
+app.get("/createprojectrolesskill", (req, res) => {
+    let sql = "CREATE TABLE if not exists projectrolesskill (RoleSkillID int AUTO_INCREMENT, RoleID int NOT NULL, Skilldesc varchar(255), PRIMARY KEY(RoleSkillID), FOREIGN KEY(RoleID) REFERENCES projectroles(RoleID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ProjectRolesSkill table created");
+    });
+});
+
+// Insert ProjectRolesSkill Details
+app.post('/insertprojectrolesskill', (req, res) => {
+    const { RoleID, Skilldesc } = req.body;
+
+    const sql = 'INSERT INTO projectrolesskill (RoleID, Skilldesc) VALUES (?, ?)';
+    const values = [RoleID, Skilldesc];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ProjectRolesSkill details added successfully');
+    });
+});
+
+
+// Create ProjectTages Table
+app.get("/createprojecttags", (req, res) => {
+    let sql = "CREATE TABLE if not exists projecttages (TagID int AUTO_INCREMENT, ProjectID int NOT NULL, Tagname varchar(255), PRIMARY KEY(TagID), FOREIGN KEY(ProjectID) REFERENCES project(ProjectID))";
+
+    // Execute the CREATE TABLE statement
+    db.query(sql, (err) => {
+        if (err) {
+            console.error(err);
+
+            // Send a response indicating that an error occurred
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send("ProjectTages table created");
+    });
+});
+
+// Insert ProjectTages Details
+app.post('/insertprojecttags', (req, res) => {
+    const { ProjectID, Tagname } = req.body;
+
+    const sql = 'INSERT INTO projecttages (ProjectID, Tagname) VALUES (?, ?)';
+    const values = [ProjectID, Tagname];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.send('ProjectTages details added successfully');
+    });
+});
+
+
+
+
+
 // Frontend routes
 
 // Signup
@@ -430,7 +746,7 @@ app.post("/signup", (req, res) => {
   const hashedPassword = bcrypt.hashSync(Password, 10);
 
   let sql =
-    "INSERT INTO User (Username, Password, Email, FirstName, LastName) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO user (Username, Password, Email, FirstName, LastName) VALUES (?, ?, ?, ?, ?)";
 
   db.query(
     sql,
@@ -457,7 +773,7 @@ app.post("/login", (req, res) => {
   const { Username, Password } = req.body;
 
   // Fetch user details by username from the database
-  let sql = "SELECT * FROM User WHERE Username = ?";
+  let sql = "SELECT * FROM user WHERE Username = ?";
   db.query(sql, [Username], (err, results) => {
     if (err) {
       console.error(err);
@@ -565,6 +881,54 @@ app.post("/reset-password/:token", (req, res) => {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////
+
+// Reset Increment Counters for All Tables
+app.post("/resetallincrements", async (req, res) => {
+    try {
+        const tables = [
+            'User',
+            'Project',
+            'Feedback',
+            'UserSkillSet',
+            'LikedProject',
+            'ProjectMember',
+            'Portfolio',
+            'Experience',
+            'ExperienceTask',
+            'Education',
+            'EducationTask',
+            'Certification',
+            'ProjectRoles',
+            'ProjectRolesSkill',
+            'ProjectTages'
+            // Add more table names as needed
+        ];
+
+        for (const table of tables) {
+            const sql = `ALTER TABLE ${table} AUTO_INCREMENT = 1`;
+            await executeQuery(sql);
+        }
+
+        res.send("All increment counters reset successfully");
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Helper function to execute a query
+function executeQuery(sql) {
+    return new Promise((resolve, reject) => {
+        db.query(sql, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
 
 app.listen("3000", () => {
   console.log("Server Started on port 3000");
